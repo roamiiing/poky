@@ -23,15 +23,22 @@
         голосование
       </GButton>
 
-      <GButton
-        outline
-        circle
-        variant="error"
-        class="flex-shrink-0"
-        @click="deleteRoom"
+      <GButton circle variant="error" class="flex-shrink-0" @click="deleteRoom"
         ><template #icon><HeroiconsOutlineTrash /></template
       ></GButton>
     </div>
+
+    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'idle'">
+      Начните первое голосование в этой комнате, нажав на кнопку выше
+    </p>
+
+    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'voting'">
+      Подождите, пока все проголосуют, и нажмите кнопку снова
+    </p>
+
+    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'finished'">
+      Вы можете начать следующее голосование
+    </p>
 
     <div
       class="grid grid-cols-4 gap-3 mt-16"
