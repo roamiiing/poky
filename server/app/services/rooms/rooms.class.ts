@@ -48,7 +48,8 @@ export class Rooms extends Service<RoomModel> {
 
   public async createRoom(data: Pick<RoomModel, 'name'>): Promise<Room> {
     const created = <RoomModel>await super.create({
-      name: data.name,
+      stage: 'idle',
+      name: data.name || 'Тут могло быть ваше название',
       votes: [],
     })
 
