@@ -30,14 +30,21 @@
   import GInput from '~/components/g-input.vue'
   import GButton from '~/components/g-button.vue'
   import { onMounted, onUnmounted, ref } from 'vue'
-  import { useRouter } from '#app'
+  import { useAsyncData, useHead, useRouter } from '#app'
   import { Room } from '~/shared/domain'
+
+  useHead({
+    title: 'Poky',
+  })
 
   const router = useRouter()
 
   const roomName = ref('')
 
-  const rooms = ref<Pick<Room, 'id' | 'name'>[]>([])
+  const { data: rooms, refresh: reloadRooms } = await useAsyncData(
+    'roomsFromApi',
+    () => $fetch('/api/rooms/list'),
+  )
 
   const submitForm = async () => {
     const { id } = await $fetch('/api/rooms/create', {
@@ -50,18 +57,10 @@
     await router.push(`/rooms/${id}`)
   }
 
-  const intervalFn = async () => {
-    const roomsFromApi = await $fetch('/api/rooms/list')
-
-    rooms.value = roomsFromApi
-  }
-
-  intervalFn()
-
   const intervalId = ref<NodeJS.Timeout>(null)
 
   onMounted(() => {
-    intervalId.value = setInterval(intervalFn, 1000)
+    intervalId.value = setInterval(reloadRooms, 1000)
   })
 
   onUnmounted(() => {

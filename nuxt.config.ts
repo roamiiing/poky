@@ -5,4 +5,9 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     ['unplugin-icons/nuxt', { autoInstall: true }],
   ],
+  app: {
+    head: {
+      link: [{ rel: 'icon', href: '/favicon.ico' }],
+    },
+  },
 })

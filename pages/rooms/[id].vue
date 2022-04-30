@@ -78,11 +78,12 @@
 <script setup lang="ts">
   import HeroiconsOutlineChevronLeft from '~icons/heroicons-outline/chevron-left'
   import HeroiconsOutlineTrash from '~icons/heroicons-outline/trash'
-  import { useRoute, useRouter } from '#app'
+  import { useAsyncData, useHead, useRoute, useRouter } from '#app'
   import {
     computed,
     onMounted,
     onUnmounted,
+    Ref,
     ref,
     watch,
     WatchStopHandle,
@@ -96,7 +97,29 @@
 
   const id = computed(() => route.params.id as string)
 
-  const roomState = ref<Room>(null)
+  const asyncDataResult = await useAsyncData(
+    `roomState${id.value}`,
+    async () => {
+      try {
+        const result = await $fetch(`/api/rooms/get-state`, {
+          params: {
+            id: id.value,
+          },
+        })
+        return <Room>result
+      } catch (e) {
+        router.push('/')
+      }
+    },
+  )
+
+  // неправильно подтягивает тип
+  const roomState = asyncDataResult.data as Ref<Room>
+  const reloadRoomState = asyncDataResult.refresh
+
+  useHead({
+    title: `${roomState.value?.name} | Poky`,
+  })
 
   const selectedVote = ref<Vote>(null)
 
@@ -163,33 +186,16 @@
     }
   }
 
-  const intervalFn = async () => {
-    try {
-      const state = await $fetch(`/api/rooms/get-state`, {
-        params: {
-          id: id.value,
-        },
-      })
-
-      roomState.value = state
-    } catch (e) {
-      router.push('/')
-    }
-  }
-
-  intervalFn()
-
-  const intervalId = ref<NodeJS.Timeout>(null)
-
+  let intervalId: NodeJS.Timeout = null
   let stopWatch: WatchStopHandle
 
   onMounted(() => {
-    intervalId.value = setInterval(intervalFn, 1000)
+    intervalId = setInterval(reloadRoomState, 1000)
 
     stopWatch = watch(
       () => roomState.value?.stage,
-      state => {
-        if (state === 'finished') {
+      stage => {
+        if (stage === 'finished') {
           selectedVote.value = null
         }
       },
@@ -197,7 +203,7 @@
   })
 
   onUnmounted(() => {
-    clearInterval(intervalId.value)
+    clearInterval(intervalId)
 
     stopWatch()
   })
