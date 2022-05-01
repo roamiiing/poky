@@ -55,7 +55,9 @@
     </div>
 
     <div class="mt-16 w-full h-64" v-else-if="roomState.stage === 'finished'">
-      <table class="charts-css column show-labels show-4-secondary-axes">
+      <table
+        class="room-chart charts-css column show-labels show-4-secondary-axes"
+      >
         <caption>
           Результаты
         </caption>

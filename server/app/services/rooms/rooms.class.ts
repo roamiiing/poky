@@ -22,7 +22,7 @@ export class Rooms extends Service<RoomModel> {
   }
 
   private static mapVotes(votes: Vote[]): VoteFinalMap {
-    return votes.reduce((acc, vote) => {
+    return [...votes].sort().reduce((acc, vote) => {
       acc[vote] = acc[vote] ? acc[vote] + 1 : 1
       return acc
     }, <VoteFinalMap>{})
@@ -47,7 +47,7 @@ export class Rooms extends Service<RoomModel> {
   }
 
   public async createRoom(data: Pick<RoomModel, 'name'>): Promise<Room> {
-    const created = <RoomModel>await super.create({
+    const created = <RoomModel>await this.create({
       stage: 'idle',
       name: data.name || 'Тут могло быть ваше название',
       votes: [],
