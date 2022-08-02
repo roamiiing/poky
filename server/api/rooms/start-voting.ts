@@ -6,7 +6,7 @@ import { Id } from '@feathersjs/feathers'
 export default defineEventHandler(async event => {
   try {
     const { id } = await useQuery(event)
-    return app.services[Services.Rooms].startVoting(<Id>id)
+    return app.services[Services.Rooms].startVoting(<Id>parseInt(id as string))
   } catch (e) {
     return sendError(event, e)
   }

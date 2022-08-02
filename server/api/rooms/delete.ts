@@ -6,7 +6,7 @@ import { Id } from '@feathersjs/feathers'
 export default defineEventHandler(async event => {
   try {
     const { id } = await useQuery(event)
-    return app.services[Services.Rooms].deleteRoom(<Id>id)
+    return app.services[Services.Rooms].deleteRoom(<Id>parseInt(id as string))
   } catch (e) {
     return sendError(event, e)
   }
