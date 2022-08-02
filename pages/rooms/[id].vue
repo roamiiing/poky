@@ -8,7 +8,7 @@
       <span>К списку комнат</span>
     </RouterLink>
 
-    <span class="text-sm text-zinc-500 mt-10">Комната {{ roomStatus }}</span>
+    <span class="text-sm mt-10">Комната {{ roomStatus }}</span>
     <h2 class="text-3xl mb-10">{{ roomState.name }}</h2>
 
     <div class="flex flex-row space-x-3">
@@ -28,15 +28,15 @@
       ></GButton>
     </div>
 
-    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'idle'">
+    <p class="pt-8" v-if="roomState.stage === 'idle'">
       Начните первое голосование в этой комнате, нажав на кнопку выше
     </p>
 
-    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'voting'">
+    <p class="pt-8" v-if="roomState.stage === 'voting'">
       Подождите, пока все проголосуют, и нажмите кнопку снова
     </p>
 
-    <p class="text-zinc-500 pt-8" v-if="roomState.stage === 'finished'">
+    <p class="pt-8" v-if="roomState.stage === 'finished'">
       Вы можете начать следующее голосование
     </p>
 
@@ -56,7 +56,7 @@
 
     <div class="mt-16 w-full h-64" v-else-if="roomState.stage === 'finished'">
       <table
-        class="room-chart charts-css column show-labels show-4-secondary-axes"
+        class="room-chart charts-css column show-labels show-4-secondary-axes text-black dark:text-zinc-100"
       >
         <caption>
           Результаты
@@ -65,7 +65,10 @@
         <tbody>
           <tr v-for="[key, value] in Object.entries(votes)" :key="key">
             <th scope="row">{{ key }}</th>
-            <td :style="`--size: calc(${value} / ${resultsSum})`">
+            <td
+              :style="`--size: calc(${value} / ${resultsSum})`"
+              class="room-chart"
+            >
               <span class="data">{{ value }}</span>
             </td>
           </tr>
@@ -210,3 +213,22 @@
     stopWatch()
   })
 </script>
+
+<style>
+  .room-chart {
+    --color-1: theme('colors.sky.500');
+    --color-2: theme('colors.sky.400');
+    --color-3: theme('colors.sky.500');
+    --color-4: theme('colors.sky.400');
+    --color-5: theme('colors.sky.500');
+    --color-6: theme('colors.sky.400');
+    --color-7: theme('colors.sky.500');
+    --secondary-axes-color: theme('colors.zinc.200');
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .room-chart {
+      --secondary-axes-color: theme('colors.zinc.700');
+    }
+  }
+</style>

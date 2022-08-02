@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <input
-      class="peer w-full appearance-none rounded-lg border border-zinc-100 bg-zinc-50 px-5 transition-colors duration-100 placeholder:opacity-0 hover:bg-zinc-100 focus:bg-zinc-100 focus:outline-none"
+      class="peer w-full appearance-none rounded-lg border border-zinc-100 bg-zinc-50 px-5 transition-colors duration-100 placeholder:opacity-0 hover:bg-zinc-100 focus:bg-zinc-100 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600"
       :id="id"
       :placeholder="label || 'Input'"
       :value="modelValue"

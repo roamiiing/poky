@@ -19,7 +19,7 @@
         {{ name }}
       </GButton>
 
-      <p class="text-zinc-500" v-if="rooms.length === 0">
+      <p v-if="rooms.length === 0">
         На данный момент нет открытых комнат, но вы можете исправить эту
         ситуацию прямо сейчас!
       </p>
@@ -31,7 +31,6 @@
   import GButton from '~/components/g-button.vue'
   import { onMounted, onUnmounted, ref } from 'vue'
   import { useAsyncData, useHead, useRouter } from '#app'
-  import { Room } from '~/shared/domain'
 
   useHead({
     title: 'Poky',

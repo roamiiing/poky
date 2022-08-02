@@ -1,7 +1,7 @@
 <template>
   <div
-    class="rounded-xl select-none cursor-pointer shadow-lg aspect-[3/5] w-full text-4xl flex flex-col space-y-6 justify-center items-center group font-thin hover:scale-110 hover:shadow-2xl transition-all duration-300"
-    :class="isSelected && 'ring-4 ring-blue-200'"
+    class="rounded-xl select-none cursor-pointer shadow-lg dark:shadow-[rgba(0,0,0,.3)] dark:bg-zinc-800 aspect-[3/5] w-full text-4xl flex flex-col space-y-6 justify-center items-center group font-thin hover:scale-110 hover:shadow-2xl transition-all duration-300"
+    :class="isSelected && 'ring-4 ring-blue-200 dark:ring-blue-400'"
   >
     <component
       :is="component"

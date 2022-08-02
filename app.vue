@@ -9,5 +9,6 @@
 
 <script lang="ts" setup>
   import 'charts.css'
+  import '~/assets/styles/index.css'
   import PokyLogo from '~/components/poky-logo.vue'
 </script>
