@@ -6,6 +6,4 @@ export enum Services {
 
 export interface ServiceTypes {}
 
-export interface AppDeps {}
-
-export type Application = FeathersApp<ServiceTypes> & Partial<AppDeps>
+export type Application = FeathersApp<ServiceTypes>

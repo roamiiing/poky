@@ -1,32 +1,21 @@
-import { PrismaService } from 'feathers-prisma'
-import { Room as RoomModel, RoomStage } from '@prisma/client'
+import { Service } from 'feathers-memory'
+import { RoomModel } from '~/server/app/models'
 import { Id } from '@feathersjs/feathers'
 import { Room, Vote, VoteFinalMap } from '~/shared/domain'
 
-export class Rooms extends PrismaService<RoomModel> {
-  private static mapStage(stage: RoomStage): Room['stage'] {
-    switch (stage) {
-      case RoomStage.Voting:
-        return 'voting'
-      case RoomStage.Idle:
-        return 'idle'
-      default:
-        return 'finished'
-    }
-  }
-
+export class Rooms extends Service<RoomModel> {
   private static map(model: RoomModel): Room {
     return <Room>{
       id: model.id,
       name: model.name,
-      stage: Rooms.mapStage(model.stage),
-      ...(model.stage === RoomStage.Voting
+      stage: model.stage,
+      ...(model.stage === 'voting'
         ? {
             playersVoted: model.votes.length,
           }
-        : model.stage === RoomStage.Finished
+        : model.stage === 'finished'
         ? {
-            votes: Rooms.mapVotes(model.votes as Vote[]),
+            votes: Rooms.mapVotes(model.votes),
           }
         : {}),
     }
@@ -59,7 +48,7 @@ export class Rooms extends PrismaService<RoomModel> {
 
   public async createRoom(data: Pick<RoomModel, 'name'>): Promise<Room> {
     const created = <RoomModel>await this.create({
-      stage: RoomStage.Idle,
+      stage: 'idle',
       name: data.name || 'Тут могло быть ваше название',
       votes: [],
     })
@@ -69,7 +58,7 @@ export class Rooms extends PrismaService<RoomModel> {
 
   public async startVoting(id: Id): Promise<Room> {
     const patched = <RoomModel>await this.patch(id, {
-      stage: RoomStage.Voting,
+      stage: 'voting',
       votes: [],
     })
 
@@ -77,8 +66,8 @@ export class Rooms extends PrismaService<RoomModel> {
   }
 
   public async stopVoting(id: Id): Promise<Room> {
-    const patched = <RoomModel>await this.patch(id, {
-      stage: RoomStage.Finished,
+    const patched = <RoomModel>await this.patch(id as string, {
+      stage: 'finished',
     })
 
     return Rooms.map(patched)
@@ -86,8 +75,8 @@ export class Rooms extends PrismaService<RoomModel> {
 
   public async vote(id: Id, vote: Vote): Promise<Room> {
     const before = await this.get(id)
-    const after = <RoomModel>await this.patch(id, {
-      stage: RoomStage.Voting,
+    const after = <RoomModel>await this.patch(id as string, {
+      stage: 'voting',
       votes: [...before.votes, vote],
     })
 

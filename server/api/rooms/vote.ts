@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
     const { id, vote } = await useBody(event)
 
     return app.services[Services.Rooms].vote(
-      <Id>parseInt(id as string),
+      <Id>id,
       <Vote>parseInt(vote as string),
     )
   } catch (e) {
